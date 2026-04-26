@@ -254,3 +254,74 @@ Importing: Neunaugen, alle gefährdet.json  (title='Neunaugen, alle gefährdet')
 ──────────────────────────────────────────────────
 2026-04-26 17:18:26,566  INFO     Done. Success: 0  Failed: 2
 2026-04-26 17:18:26,566  INFO     Check import_log.txt for details on failures.
+2026-04-26 17:32:19,767  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 17:32:19,767  INFO     DRY RUN — no API calls will be made
+2026-04-26 17:32:19,767  INFO       Miosis vs Mydriasis.json → 'Miosis vs Mydriasis' | 3 attachment(s)
+2026-04-26 17:32:19,767  INFO       Neunaugen, alle gefährdet.json → 'Neunaugen, alle gefährdet' | 4 attachment(s)
+2026-04-26 17:32:46,932  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 17:32:46,932  INFO     
+Importing: Miosis vs Mydriasis.json  (title='Miosis vs Mydriasis')
+2026-04-26 17:32:47,722  ERROR      HTTP error: 404 — 
+2026-04-26 17:32:47,723  INFO     
+Importing: Neunaugen, alle gefährdet.json  (title='Neunaugen, alle gefährdet')
+2026-04-26 17:32:48,435  ERROR      HTTP error: 404 — 
+2026-04-26 17:32:48,436  INFO     
+──────────────────────────────────────────────────
+2026-04-26 17:32:48,436  INFO     Done. Success: 0  Failed: 2
+2026-04-26 17:32:48,436  INFO     Check import_log.txt for details on failures.
+2026-04-26 17:40:36,427  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 17:40:36,427  INFO     
+Importing: Miosis vs Mydriasis.json  (title='Miosis vs Mydriasis')
+2026-04-26 17:40:37,172  ERROR      HTTP error: 404 — 
+2026-04-26 17:40:37,173  INFO     
+Importing: Neunaugen, alle gefährdet.json  (title='Neunaugen, alle gefährdet')
+2026-04-26 17:40:37,855  ERROR      HTTP error: 404 — 
+2026-04-26 17:40:37,856  INFO     
+──────────────────────────────────────────────────
+2026-04-26 17:40:37,856  INFO     Done. Success: 0  Failed: 2
+2026-04-26 17:40:37,856  INFO     Check import_log.txt for details on failures.
+2026-04-26 17:46:51,679  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 17:46:51,679  INFO     Target brain: 18faa17b-ee52-4cde-92d8-2f26f83d6956
+2026-04-26 17:46:52,399  ERROR    API probe failed 401: Invalid API Key
+2026-04-26 17:46:52,399  ERROR    Check your API key and brain ID. Aborting.
+2026-04-26 17:50:18,098  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 17:50:18,098  INFO     Target brain: 18faa17b-ee52-4cde-92d8-2f26f83d6956
+2026-04-26 17:50:18,930  INFO     API connection OK - brain name: 'voelker-steven Test import'
+2026-04-26 17:50:18,931  INFO     
+Importing: Miosis vs Mydriasis.json  (title='Miosis vs Mydriasis')
+2026-04-26 17:50:19,784  INFO       Created thought 'Miosis vs Mydriasis' → 05c7a529-264e-4077-b04f-11fccc11eefb
+2026-04-26 17:50:23,200  ERROR      POST https://api.bra.in/thoughts/18faa17b-ee52-4cde-92d8-2f26f83d6956/05c7a529-264e-4077-b04f-11fccc11eefb/attachments -> 405: 
+2026-04-26 17:50:23,200  ERROR      HTTP error: 405 — 
+2026-04-26 17:50:23,201  INFO     
+Importing: Neunaugen, alle gefährdet.json  (title='Neunaugen, alle gefährdet')
+2026-04-26 17:50:23,952  INFO       Created thought 'Neunaugen, alle gefährdet' → 356bcd8e-9ab9-4c97-933d-25aab6608897
+2026-04-26 17:50:25,189  ERROR      PATCH https://api.bra.in/thoughts/18faa17b-ee52-4cde-92d8-2f26f83d6956/356bcd8e-9ab9-4c97-933d-25aab6608897/notes -> 404: 
+2026-04-26 17:50:25,189  ERROR      HTTP error: 404 — 
+2026-04-26 17:50:25,190  INFO     
+──────────────────────────────────────────────────
+2026-04-26 17:50:25,190  INFO     Done. Success: 0  Failed: 2
+2026-04-26 17:50:25,190  INFO     Check import_log.txt for details on failures.
+2026-04-26 19:18:54,005  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 19:18:54,005  INFO     Target brain: 18faa17b-ee52-4cde-92d8-2f26f83d6956
+2026-04-26 19:18:54,776  ERROR    API probe failed 401: Invalid API Key
+2026-04-26 19:18:54,776  ERROR    Check your API key and brain ID. Aborting.
+2026-04-26 19:19:55,836  INFO     Found 2 JSON file(s) in /home/este/keep_to_thebrain/files/test
+2026-04-26 19:19:55,836  INFO     Target brain: 18faa17b-ee52-4cde-92d8-2f26f83d6956
+2026-04-26 19:19:56,644  INFO     API connection OK - brain name: 'voelker-steven Test import'
+2026-04-26 19:19:56,645  INFO     
+Importing: Miosis vs Mydriasis.json  (title='Miosis vs Mydriasis')
+2026-04-26 19:19:57,411  INFO       Created thought 'Miosis vs Mydriasis' → 530c5e2f-6bfd-41d6-aa55-be14a7776c1e
+2026-04-26 19:20:01,476  INFO       Attached 1598353698664.1582561867.png
+2026-04-26 19:20:06,143  INFO       Attached 1598353749699.1457280706.png
+2026-04-26 19:20:06,644  WARNING    Attachment not found: 0e77fab4-da99-445d-9536-bf58add49457.png (or 0e77fab4-da99-445d-9536-bf58add49457.png)
+2026-04-26 19:20:06,644  INFO     
+Importing: Neunaugen, alle gefährdet.json  (title='Neunaugen, alle gefährdet')
+2026-04-26 19:20:07,395  INFO       Created thought 'Neunaugen, alle gefährdet' → ecc2a08e-2a24-47a3-9ff3-f4b06773bbc8
+2026-04-26 19:20:08,681  INFO       Note set (482 chars)
+2026-04-26 19:20:10,535  INFO       Attached 1637068537957.1720859050.png
+2026-04-26 19:20:12,618  INFO       Attached 1637068679603.507634383.png
+2026-04-26 19:20:14,616  INFO       Attached 1637068800046.1959523789.png
+2026-04-26 19:20:15,117  WARNING    Attachment not found: efd4291d-f23b-4fd3-b074-4a42a78896a3.png (or efd4291d-f23b-4fd3-b074-4a42a78896a3.png)
+2026-04-26 19:20:15,117  INFO     
+──────────────────────────────────────────────────
+2026-04-26 19:20:15,117  INFO     Done. Success: 2  Failed: 0

@@ -5,6 +5,7 @@ One thought per Keep note, with images attached to that thought.
 
 Usage:
     python keep_to_thebrain.py --export-dir /path/to/keep/export
+    python keep_to_thebrain.py --export-dir /path/to/keep/export --brain-id <uuid>
 
 Requirements:
     pip install requests
@@ -29,8 +30,8 @@ import requests
 # ── Config ────────────────────────────────────────────────────────────────────
 
 API_BASE   = "https://api.bra.in"
-API_KEY    = "5e8acfa20771a403944f7ef6688f7507d2f2e53233414ab4bacd9cc9fc16bbd7"
-BRAIN_ID   = "18faa17b-ee52-4cde-92d8-2f26f83d6956"
+API_KEY    = "d9a749a694b07565590596157bac7b4ea6a43d21ce24938c95f5e0354bdf3336"
+DEFAULT_BRAIN_ID = "18faa17b-ee52-4cde-92d8-2f26f83d6956"
 
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
@@ -58,6 +59,8 @@ def api_post(path: str, **kwargs) -> requests.Response:
     """POST to TheBrain API, raise on HTTP error."""
     url = f"{API_BASE}{path}"
     r = requests.post(url, headers=HEADERS, **kwargs)
+    if not r.ok:
+        log.error(f"  POST {url} -> {r.status_code}: {r.text[:500]}")
     r.raise_for_status()
     return r
 
@@ -65,8 +68,23 @@ def api_post(path: str, **kwargs) -> requests.Response:
 def api_patch(path: str, **kwargs) -> requests.Response:
     url = f"{API_BASE}{path}"
     r = requests.patch(url, headers=HEADERS, **kwargs)
+    if not r.ok:
+        log.error(f"  PATCH {url} -> {r.status_code}: {r.text[:500]}")
     r.raise_for_status()
     return r
+
+
+def probe_api(brain_id: str) -> None:
+    """GET the brain to verify the API key and brain ID are valid before importing."""
+    url = f"{API_BASE}/brains/{brain_id}"
+    r = requests.get(url, headers=HEADERS)
+    if r.ok:
+        name = r.json().get("name", "(unnamed)")
+        log.info(f"API connection OK - brain name: '{name}'")
+    else:
+        log.error(f"API probe failed {r.status_code}: {r.text[:500]}")
+        log.error("Check your API key and brain ID. Aborting.")
+        sys.exit(1)
 
 
 def dot_to_underscore(filename: str) -> str:
@@ -92,14 +110,14 @@ def clean_text(text: str) -> str:
 
 # ── Core import logic ─────────────────────────────────────────────────────────
 
-def create_thought(title: str) -> str:
+def create_thought(title: str, brain_id: str) -> str:
     """Create a new thought and return its ID."""
     payload = {
         "name":     title or "Untitled",
         "kind":     1,   # 1 = Normal thought
     }
     r = api_post(
-        f"/brains/{BRAIN_ID}/thoughts",
+        f"/thoughts/{brain_id}",
         json=payload,
     )
     thought_id = r.json()["id"]
@@ -107,29 +125,29 @@ def create_thought(title: str) -> str:
     return thought_id
 
 
-def set_note(thought_id: str, markdown: str) -> None:
+def set_note(thought_id: str, markdown: str, brain_id: str) -> None:
     """Set the markdown note on a thought."""
     if not markdown:
         return
-    api_patch(
-        f"/brains/{BRAIN_ID}/thoughts/{thought_id}/notes",
+    api_post(
+        f"/notes/{brain_id}/{thought_id}/update",
         json={"markdown": markdown},
     )
     log.info(f"  Note set ({len(markdown)} chars)")
 
 
-def attach_file(thought_id: str, file_path: Path) -> None:
+def attach_file(thought_id: str, file_path: Path, brain_id: str) -> None:
     """Upload a file as an attachment to a thought."""
     mime = "image/png" if file_path.suffix.lower() == ".png" else "application/octet-stream"
     with open(file_path, "rb") as f:
         r = api_post(
-            f"/brains/{BRAIN_ID}/thoughts/{thought_id}/attachments",
+            f"/attachments/{brain_id}/{thought_id}/file",
             files={"file": (file_path.name, f, mime)},
         )
     log.info(f"  Attached {file_path.name}")
 
 
-def import_note(json_path: Path, export_dir: Path) -> bool:
+def import_note(json_path: Path, export_dir: Path, brain_id: str) -> bool:
     """
     Import a single Keep note JSON as one TheBrain thought.
     Returns True on success, False on failure.
@@ -152,11 +170,11 @@ def import_note(json_path: Path, export_dir: Path) -> bool:
     log.info(f"\nImporting: {json_path.name}  (title='{title}')")
 
     try:
-        thought_id = create_thought(title)
+        thought_id = create_thought(title, brain_id)
         time.sleep(RATE_DELAY)
 
         if note_md:
-            set_note(thought_id, note_md)
+            set_note(thought_id, note_md, brain_id)
             time.sleep(RATE_DELAY)
 
         for att in data.get("attachments", []):
@@ -172,7 +190,7 @@ def import_note(json_path: Path, export_dir: Path) -> bool:
                 log.warning(f"  Attachment not found: {local_name} (or {raw_name})")
                 continue
 
-            attach_file(thought_id, file_path)
+            attach_file(thought_id, file_path, brain_id)
             time.sleep(RATE_DELAY)
 
         return True
@@ -190,9 +208,11 @@ def import_note(json_path: Path, export_dir: Path) -> bool:
 def main():
     parser = argparse.ArgumentParser(description="Import Google Keep export into TheBrain")
     parser.add_argument("--export-dir", required=True, help="Path to the Keep export folder")
+    parser.add_argument("--brain-id", default=DEFAULT_BRAIN_ID, help="TheBrain brain UUID (default: hardcoded value)")
     parser.add_argument("--dry-run", action="store_true", help="Parse only, make no API calls")
     args = parser.parse_args()
 
+    brain_id   = args.brain_id
     export_dir = Path(args.export_dir).expanduser().resolve()
     if not export_dir.is_dir():
         log.error(f"Export directory not found: {export_dir}")
@@ -204,6 +224,9 @@ def main():
         sys.exit(1)
 
     log.info(f"Found {len(json_files)} JSON file(s) in {export_dir}")
+    log.info(f"Target brain: {brain_id}")
+
+    probe_api(brain_id)
 
     if args.dry_run:
         log.info("DRY RUN — no API calls will be made")
@@ -217,7 +240,7 @@ def main():
 
     ok, fail = 0, 0
     for jf in json_files:
-        success = import_note(jf, export_dir)
+        success = import_note(jf, export_dir, brain_id)
         if success:
             ok += 1
         else:
